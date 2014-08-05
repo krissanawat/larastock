@@ -1,0 +1,11 @@
+/bootstrap/compiled.php
+/vendor
+composer.phar
+.DS_Store
+/app/config/database.php
+/app/config/mail.php
+/app/database/*.sqlite
+/app/storage/logs/*
+/app/storage/meta/services.json
+/app/storage/sessions/*
+/app/storage/views/*
