@@ -79,7 +79,46 @@ class UserController extends BaseController {
         if(Request::isMethod('post')){
         	// kint::dump(Input::file('pic'));dd();
         	$user = Input::only('email','password','first_name','last_name','pic');
-        	$this->create($user);
+        		     	try
+			{
+			    $data = Sentry::findUserById(Input::get('id'));
+			    if($user){
+			    $data->email = $user['email'];
+			    $data->first_name = $user['first_name'];
+			    $data->last_name = $user['last_name'];
+			    $data->password = Hash::make($user['password']);
+			    $data->save();
+			    }else{
+					Sentry::createUser(array(
+						'id'     => Input::get('id'),
+						'email'     => $user['email'],
+						'password'  => Hash::make($user['email']),
+						'first_name'     => $user['first_name'],
+						'last_name'  => $user['last_name'],
+						'activated' => true,
+					));
+			    }
+				
+
+				return Redirect::back()->with('success','เพิ่มผู้ใช้งานสำเร็จ');
+
+			}
+			catch (Cartalyst\Sentry\Users\LoginRequiredException $e)
+			{
+				return Redirect::back()->with('danger','กรณากรอกอีเมล์ด้วย');
+			}
+			catch (Cartalyst\Sentry\Users\PasswordRequiredException $e)
+			{
+				return Redirect::back()->with('danger','กรณากรอกรหัสด้วย');
+			}
+			catch (Cartalyst\Sentry\Users\UserExistsException $e)
+			{
+				return Redirect::back()->with('danger','อีเมล์นี้ถูกใช้งานแล้ว');
+			}
+			catch (Cartalyst\Sentry\Groups\GroupNotFoundException $e)
+			{
+				return Redirect::back()->with('danger','ไม่พบกลุ่ม');
+			}
         }else{
         	$user = User::all();
         	return View::make('users.index')->with('user',$user);

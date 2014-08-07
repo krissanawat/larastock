@@ -38,7 +38,16 @@ Route::group(array('prefix'=>'fixstock'),function(){
 			'uses'=>'FixstockController@delete'
 			));
 });
-
+Route::group(array('prefix'=>'product'),function(){
+		Route::any('/',array(
+			'as'=>'product',
+			'uses'=>'ProductController@index'
+			));
+		Route::get('delete/{id}',array(
+			'as'=>'delete/product',
+			'uses'=>'ProductController@delete'
+			));
+});
 Route::group(array('prefix'=>'user'),function(){
 		Route::any('/',array(
 			'as'=>'user',

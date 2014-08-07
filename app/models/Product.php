@@ -9,4 +9,7 @@ class Product extends Elegant{
     public function user(){
         return $this->belongsTo('User','user_id');
     }
+    public function fixstock(){
+        return $this->belongsTo('Fixstock','fixstock_id');
+    }
   }

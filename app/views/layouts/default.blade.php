@@ -142,6 +142,14 @@
 
                
             </li>
+      <li{{ (Request::is('product/*') ? ' class="active"><div class="pointer"><div class="arrow"></div><div class="arrow_border"></div></div>' : '>') }}
+          <a href="{{ route('product') }}">
+              <i class="icon-large icon-bank"></i>
+              <span>กำหนดสินค้า</span>
+          </a>
+
+               
+     </li>
      <li{{ (Request::is('user/*') ? ' class="active"><div class="pointer"><div class="arrow"></div><div class="arrow_border"></div></div>' : '>') }}
                 <a href="{{ route('user') }}">
                     <i class="icon-large icon-user"></i>

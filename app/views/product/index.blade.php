@@ -27,9 +27,10 @@
                             <th class="col-md-1">รหัส</th>
                             <th class="col-md-1">ชื่อ</th>
                             <th class="col-md-1">หน่วย</th>
-                            <th class="col-md-1">ภาพ</th>
+                            <th class="col-md-1">ชั้นที่เก็บ</th>
+                           <th class="col-md-1">คนที่เพิ่ม</th>
                             <th class="col-md-1">วันที่เพิ่ม</th>
-                            <th class="col-md-1">คนที่เพิ่ม</th>
+                             <th class="col-md-1">barcode</th>
                             <th class="col-md-1">การจัดการ</th>
                         </tr>
                     </thead>
@@ -39,16 +40,19 @@
                     <tr id="{{ $product->id }}" >
                     <td class="childrow">{{ $product->id }}</td>
                     <td class="childrow">{{ $product->name }}</td>
-                    <td class="childrow">{{ $product->unit->name }}</td>
-                    <td class="childrow">{{ $product->user->first_name }}</td>
-                    <td class="childrow">{{ $product->created_at }}</td>
+                    <td class="childrow">{{ $product->unit->id }}</td>
+                    <td class="childrow">{{ $product->fixstock->id }}</td>
+                    <td class="childrow">{{ $product->user->id }}</td>
+                    <td class="childrow">{{ $product->barcode }}</td>
                      <td class="childrow">
-                     <img src="@if(!empty($product->pic)){{ $product->pic }}
-                       @else 
-                       upload/default.png
-                     @endif">
+                    @if(!empty($product->pic))
+                         <img src="{{$product->pic}}">
+                       @else
+                        <img src="/upload/product/default.png">
+                       @endif
+                     
                      </td>
-                    <td class="childrow">{{ $product->name }}</td>
+                    
                     <td>
                         <a href="#addform" id="{{$product->id}}"  data-toggle="modal" class="btn btn-warning addform"><i class="icon-large icon-edit"></i></a>
 
@@ -88,11 +92,11 @@
                     <h4 class="modal-title">เพิ่มข้อมูล</h4>
                 </div>
                 <div class="modal-body">
-                    {{ Form::open(array('route'=>'product','class'=>'form-horizontal'))}} 
+                    {{ Form::open(array('route'=>'product','files'=>'true','class'=>'form-horizontal'))}} 
                     {{ Form::hidden('id',null,array('id'=>'hiddenid'))}}
 
                      <div class="form-group">
-                        <label class="control-label col-md-4" for="categorie_id">รหัส</label>
+                        <label class="control-label col-md-4" for="id">รหัส</label>
                         <div class="col-md-6">
                             {{ Form::text('id',null,array('class'=>'form-control','readonly'))}}
                         </div>
@@ -100,14 +104,55 @@
                      
                     </div>
                     <div class="form-group">
-                        <label class="control-label col-md-4" for="categorie_id">ชื่อ</label>
+                        <label class="control-label col-md-4" for="name">ชื่อ</label>
                         <div class="col-md-6">
                             {{ Form::text('name',null,array('class'=>'form-control'))}}
                         </div>
 
+                       </div>
+                      <div class="form-group">
+                        <label class="control-label col-md-4" for="unit_id">หน่วย</label>
+                        <div class="col-md-5">
+                            {{ Form::select('unit_id',array(''=>'เลือกหน่วย')+Unit::lists('name','id'),
+                            '',array('class'=>'form-control'))}}
+                        </div>
+
                      
                     </div>
+                       <div class="form-group">
+                        <label class="control-label col-md-4" for="unit_id">ที่เก็บ</label>
+                        <div class="col-md-5">
+                            {{ Form::select('fixstock_id',array(''=>'ที่เก็บ')+Fixstock::lists('name','id'),
+                            '',array('class'=>'form-control'))}}
+                        </div>
 
+                     
+                    </div>
+                      <div class="form-group">
+                        <label class="control-label col-md-4" for="unit_id">ผู้รับผิดชอบ</label>
+                        <div class="col-md-5">
+                            {{ Form::select('user_id',array(''=>'ผู้รับผิดชอบ')+User::lists('first_name','id'),
+                            '',array('class'=>'form-control'))}}
+                        </div>
+
+                     
+                    </div>
+                     
+                   <div class="form-group">
+                        <label class="control-label col-md-4" for="barcode">Barcode</label>
+                        <div class="col-md-6">
+                            {{ Form::text('barcode',null,array('class'=>'form-control'))}}
+                        </div>
+
+                       </div> 
+                       <div class="form-group">
+                        <label class="control-label col-md-4" for="pic">ชื่อ</label>
+                        <div class="col-md-6">
+                            {{ Form::file('pic',null,array('class'=>'form-control'))}}
+                        </div>
+
+                     
+                    </div>
                     <div class="form-group">
                         <div class="col-md-6">
                             <button type="submit" value="Submit" class="btn btn-custom pull-right" id="send_btn" data-original-title="" title="">บันทึก</button>
@@ -142,10 +187,10 @@ $("#startdate").on("dp.change",function (e) {
                     var data = Number(val[1])+1;
                  }
               
-               
+               $(this).val('')
                 if($(this).attr('name') == 'id'){
                 
-                 $(this).val('U-'+pad(data,5))
+                 $(this).val('P-'+pad(data,5))
                  
                 }
                
